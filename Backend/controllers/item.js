@@ -1,13 +1,12 @@
 const Items = require("../models/Items");
+const Transactions = require("../models/Transactions");
 const Users = require("../models/Users");
 
 const addItem = async(req,res)=>{
     try{
         let { itemName,category,description,price,status,condition,images,id}=req.body;
-        console.log(images)
         let user = await Users.findById(id);
         let item = await Items.create({itemName,category,description,price,status,seller:id,condition,Images:images});
-        console.log(user)
         user.myItems.push(item);
         await user.save();
         res.status(201).json({bool:true, msg:"Item Registered"});
@@ -30,15 +29,12 @@ const getItem = async(req,res)=>{
         console.log(e.message)
         res.status(200).json({bool:false});
     }
-
 }
 
 const getUserItem = async(req,res)=>{
     try{
         const {id} = req.params;
-        console.log(id)
         let user = await Users.findById(id).populate("myItems");
-        console.log(user)
         res.status(200).json({bool:true,items:user.myItems});
     }catch(e){
         res.status(200).json({bool:false});
@@ -48,7 +44,6 @@ const getUserItem = async(req,res)=>{
 const filterItem = async(req,res)=>{
     try{
         let {priceMin,priceMax,location,condition,category,status} = req.query;
-        console.log(location)
         let items = await Items.find().populate("seller");
         if(condition!="" )
             items = items.filter((x)=>condition==x.condition);
@@ -81,4 +76,25 @@ const getItems = async(req,res)=>{
     }
 }
 
-module.exports = {addItem,filterItem,getItems,getItem,getUserItem};
+const buyItem = async(req,res) => {
+    try{
+        let {seller , buyer, item} = req.body;
+        const transaction = await Transactions.create({soldBy:seller,soldTo:buyer,itemSold:item});
+        seller = await Users.findById(seller)
+        buyer = await Users.findById(buyer)
+        seller.transactionHistory.push(transaction);
+        buyer.transactionHistory.push(transaction);
+        await seller.save();
+        await buyer.save();
+        item = await Items.findById(item);
+        item.status = "sold";
+        item.buyer = buyer;
+        await item.save();
+        res.status(200).json({bool:true,msg:"Transaction Complete"});
+    }catch(e){
+        console.log(e.message)
+        res.status(200).json({bool:false,msg:"Transaction Failed"});
+    }
+}
+
+module.exports = {addItem,filterItem,getItems,getItem,getUserItem,buyItem};

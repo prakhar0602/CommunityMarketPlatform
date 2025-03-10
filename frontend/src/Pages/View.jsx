@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -9,6 +10,7 @@ const View = () => {
   const { id } = useParams(); // Get item ID from URL
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
+  const buyer = useSelector((state)=>state.User.user);
 
   useEffect(() => {
     const fetchItem = async () => {
@@ -32,10 +34,11 @@ const View = () => {
 
   const handleBuyNow = async () => {
     try {
+      let seller = item.seller
       // Example request: This should be modified based on actual backend requirements
-      const response = await axios.post(`${backend_link}/buyItem`, { itemId: id });
+      const response = await axios.post(`${backend_link}/buy`, { item: id,seller, buyer});
       
-      if (response.data.success) {
+      if (response.data.bool) {
         toast.success("Purchase successful! 🎉");
       } else {
         toast.error("Purchase failed. Please try again.");
@@ -111,14 +114,12 @@ const View = () => {
         {/* Action Buttons */}
         <div className="mt-6 flex space-x-4">
           {/* Buy Now Button */}
-          {item.status === "sale" && (
-            <button
+            {item.seller._id!=buyer._id && item.status!="sold"?(<button
               onClick={handleBuyNow}
               className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-md text-white flex-1"
             >
               Buy Now
-            </button>
-          )}
+            </button>):(<></>)}
 
           {/* Back Button */}
           <button
@@ -127,6 +128,16 @@ const View = () => {
           >
             Go Back
           </button>
+          {
+            item.status=="sold" && item.buyer==buyer._id?(
+              <button
+            onClick={() => window.history.back()}
+            className="bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded-md text-white flex-1"
+          >
+            Give Review
+          </button>
+            ):(<></>)
+          }
         </div>
       </div>
     </div>

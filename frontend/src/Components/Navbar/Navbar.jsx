@@ -61,7 +61,7 @@ const Navbar = () => {
             </div>
 
             {/* Navigation Links */}
-            <Link to="/browse" className="text-gray-200 hover:text-purple-300 px-3 py-2 rounded-md text-sm font-medium">
+            <Link to="/" className="text-gray-200 hover:text-purple-300 px-3 py-2 rounded-md text-sm font-medium">
               Browse
             </Link>
             <Link to="/impact" className="text-gray-200 hover:text-purple-300 px-3 py-2 rounded-md text-sm font-medium">
@@ -140,7 +140,7 @@ const Navbar = () => {
             </div>
             
             <Link 
-              to="/browse" 
+              to="/" 
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-200 hover:text-purple-300 hover:bg-[#2C2638]"
               onClick={() => setIsOpen(false)}
             >

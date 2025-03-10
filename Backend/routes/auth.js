@@ -10,10 +10,10 @@ router.post('/register_user',validateSignup,handleAddUser );
 
 
 router.post('/login',validateLogin, handleLogin); 
-router.post('/updateUser',updateUser)
+router.post('/updateUser',updateUser);
 router.get('/getAllUsers',handleGetAllUsers);
 router.get('/getUser',handleGetUser);
 router.get('/verifyToken',handleVerifyToken);
-// router.get('/logout',refreshToken, handleLogout)
+router.get('/logout', handleLogout);
 
 module.exports = router;

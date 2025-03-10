@@ -14,6 +14,7 @@ import View from "./Pages/View";
 import Dashboard from "./Pages/Dashboard";
 import OtherProfile from "./Pages/OtherProfile";
 import Messaging from "./Pages/Messaging";
+import ProtectedRoutes from "./Components/ProtectedRoutes";
 const backend_link = import.meta.env.VITE_BACKEND_LINK;
 function App() {
   let dispatch = useDispatch();
@@ -35,10 +36,10 @@ function App() {
     <ToastContainer position="top-right" />
     <Routes>
       <Route path="/auth" element={<Auth />}/>
-      <Route path="/" element={<Home />}/>
+      {/* <Route path="/" element={<Home />}/> */}
       <Route path="/profile" element={<Profile />}/>
       <Route path="/profile/:id" element={<OtherProfile />}/>
-      <Route path="/browse" element={<Browse />}/>
+      <Route path="/" element={<ProtectedRoutes><Browse /></ProtectedRoutes>}/>
       <Route path="/view/:id" element={<View />}/>
       <Route path="/dashboard" element={<Dashboard />}/>
       <Route path="/messages" element={<Messaging />}/>

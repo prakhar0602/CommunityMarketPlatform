@@ -101,12 +101,8 @@ const handleLogin = async (req, res) => {
 const handleLogout = async(req,res)=>{
     try{
         res.clearCookie('accessToken')
-        res.clearCookie('refreshToken');
-        let {email} = jwt.verify(req.cookies.refreshToken,"Prakhar_Gupta")
-        await OnlineUsers.deleteOne({email}); 
         res.status(200).json({bool:true,msg:'logout'})}
         catch(e){
-
             res.status(200).json({bool:false,msg:'logout failed'})
         }
 }
